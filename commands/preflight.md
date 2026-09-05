@@ -10,6 +10,18 @@ Review the changes about to go into a pull request and flag what a reviewer
 would nitpick — before it's public. This is not a full code review: only
 report things a reasonable reviewer would actually comment on.
 
+## 0. Repo-specific config (optional)
+
+If a `.preflight.md` file exists at the repository root, read it first — it
+may add extra checks, exclude paths from review (e.g. a `vendor/` or
+`generated/` directory), or override a default below (e.g. a different size
+threshold, an error-handling convention specific to this repo). It's plain
+prose, not a schema — apply it as additional instructions alongside the
+checks below, and where it conflicts with a default here, the repo config
+wins — except an ignore rule never suppresses a hardcoded secret found in
+newly added code; a path exclusion means "don't style-review this", not
+"don't flag a live credential leaking here."
+
 ## 1. Get the diff
 
 - If `$ARGUMENTS` names a branch/ref, diff against it: `git diff $ARGUMENTS...HEAD`.

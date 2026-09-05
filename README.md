@@ -47,8 +47,14 @@ If there's nothing to review (clean tree, no commits ahead of default), it
 says so and stops — it won't invent findings.
 
 On a large diff (~15+ files or ~800+ changed lines), it states the size up
-front and focuses depth on the files with real logic changes, naming what it
-deprioritized (generated files, lockfiles, vendored code, pure renames).
+front and drops generated files, lockfiles, vendored code, and pure renames
+from consideration, naming what it dropped. For what's left, if the diff is
+genuinely too large/varied to review directly at full depth, it fans out —
+one `file-group-reviewer` subagent per group of files — instead of reviewing
+everything shallowly in one pass. In practice this rarely triggers: Claude's
+own context window comfortably handles direct review well past that size,
+so the thresholds are a safety valve for the genuinely huge case, not a hard
+rule.
 
 ## Repo-specific config
 

@@ -81,6 +81,15 @@ found — not a generic template. If the naming convention is genuinely
 mixed, it says so rather than forcing a rule. Won't overwrite an existing
 `.preflight.md` unless you pass `--force`.
 
+## Reminder before you push or open a PR
+
+The plugin also installs a hook: right before Claude runs `git push` or
+`gh pr create`, it surfaces a one-line reminder to run
+`/pr-preflight:preflight` first, if you haven't this session. It doesn't
+block the command — it's a permission-confirm prompt with the reminder as
+the reason, so you can approve and continue immediately. Any other command
+is untouched; the hook only reacts to those two.
+
 ## Why this and not just asking Claude to "review my diff"
 
 A generic review prompt checks against a style guide it's guessing at. This

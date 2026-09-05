@@ -87,3 +87,33 @@ Same fixture-repo method, with `Edit` added to `--allowedTools`.
     prompt/schema bug — the category is explicitly listed in `fix.md`'s
     "never auto-fix" list. Worth a spot-check after any future prompt change
     to `fix.md`, but not something a prompt tweak reliably fixes.
+
+## Fan-out (`file-group-reviewer` subagent, large diffs)
+
+13. **Dispatch mechanism, isolated** — a minimal prompt telling Claude to
+    dispatch the `file-group-reviewer` subagent on one file confirmed real
+    dispatch (`--debug-file` showed `agentType=pr-preflight:file-group-reviewer`,
+    a real turn count, a real completion), and it correctly caught a planted
+    `console.log`. It also correctly reported it had no Bash to fetch the
+    diff itself — confirming the parent command must pass each file's hunk
+    inline, as designed.
+14. **End-to-end, three escalating fixtures** — 20 files/66 lines, 20
+    files/264 lines, then 80 files/1104 lines, each with 2 real planted bugs
+    (a secret + debug output + missing error handling, and a second missing-
+    error-handling case) buried among filler. In all three, `preflight`
+    stated the size up front as required, but chose **not** to fan out —
+    judging it could review everything directly without losing depth — and
+    still caught both planted bugs correctly every time, plus reasonable
+    extra findings (dead code, a duplication nit) no test asked for.
+15. **Why fan-out didn't trigger**: the model's own context window is large
+    enough that even an 1100-line, 80-file diff is comfortably reviewable in
+    one pass; the size thresholds in `preflight.md` are stated as guidance,
+    not a hard trigger, so the model reasonably treats them that way. Fan-out
+    is a safety valve for a diff big/varied enough that direct reading
+    genuinely isn't feasible — verified functional in isolation (#13), but
+    not reproduced end-to-end without an even larger, hand-varied fixture
+    than was practical to script here. If this ever needs re-verifying,
+    don't bother scaling up a generated fixture further (a repeated pattern
+    is trivially easy for the model to verify without reading it all,
+    regardless of file count) — use a real large PR diff with genuinely
+    distinct logic per file instead.

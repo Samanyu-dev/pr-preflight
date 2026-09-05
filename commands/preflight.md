@@ -1,7 +1,7 @@
 ---
 description: Review the current changes for what a reviewer would flag before you open the PR.
 argument-hint: "[base-branch-or-ref]"
-allowed-tools: ["Bash", "Read", "Grep", "Glob"]
+allowed-tools: ["Bash", "Read", "Grep", "Glob", "Agent"]
 ---
 
 # PR Pre-flight
@@ -39,13 +39,29 @@ newly added code; a path exclusion means "don't style-review this", not
 ## 2. Scope the review
 
 If the diff touches more than ~15 files or ~800 changed lines, state that
-size up front unconditionally (file count, line count) before any findings,
-then focus depth on the files with the most logic changes — skip generated
-files, lockfiles, vendored code, and pure renames — rather than reviewing
-everything shallowly. Name which files you deprioritized and why, even if
-the whole diff turns out to be low-risk filler.
+size up front unconditionally (file count, line count) before any findings.
+First drop generated files, lockfiles, vendored code, and pure renames from
+consideration — name what you dropped and why.
+
+For what's left, don't review everything shallowly in this same context.
+Instead, split the remaining files into groups of ~6-8 and dispatch one
+`file-group-reviewer` subagent per group (via the `Agent` tool), so each
+group gets the same full-depth review a small diff would get. For each
+group's dispatch, include in the prompt: the list of files in that group,
+and each file's actual diff hunk (`git diff <base>...HEAD -- <file>` per
+file) — the subagent has no Bash, so it can't fetch the diff itself. Wait
+for all groups, then merge their findings into one report using the format
+in step 5 (don't just concatenate each subagent's own report verbatim).
+
+Skip the fan-out entirely for a small diff — dispatching subagents for a
+handful of files is slower for no benefit; just do steps 3-4 inline as
+below.
 
 ## 3. Check each touched file against its own neighborhood
+
+(Steps 3-4 apply directly for a small diff reviewed inline. For a diff that
+got fanned out to subagents in step 2, each subagent already applies these
+same checks to its group — don't redo them here, just merge their reports.)
 
 Read the touched file's unchanged portions and 1-2 sibling files in the same
 directory to learn the local convention *as it actually is here*, not an

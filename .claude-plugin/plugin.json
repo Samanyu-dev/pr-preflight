@@ -2,7 +2,7 @@
   "name": "pr-preflight",
   "displayName": "PR Pre-flight",
   "description": "Catch what a reviewer would flag before you open the PR — convention drift, missing tests, leftover debug code, secrets.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Samanyu"
   },

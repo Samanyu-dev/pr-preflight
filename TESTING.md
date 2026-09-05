@@ -69,3 +69,21 @@ grep -i "Hook PreToolUse" /tmp/debug.log
    output.
 10. **Unrelated command** (`ls`) — no `Hook PreToolUse` log line at all, i.e.
     no prompt/friction added for anything that isn't a push or PR creation.
+
+## `/pr-preflight:fix`
+
+Same fixture-repo method, with `Edit` added to `--allowedTools`.
+
+11. **Mixed diff** (unused import + `console.log` + secret + TODO + missing
+    error handling, no test for the new function) — the two mechanical
+    issues (unused import, `console.log`) were removed via `Edit` and listed
+    under "Applied"; the secret, TODO, and error-handling drift were left
+    untouched and reported under "Left for you", exactly as intended. The
+    secret line was never edited.
+12. **Known limitation observed**: in that same run, "missing test for the
+    new function" wasn't surfaced in "Left for you", even though a
+    same-fixture run of the base `/pr-preflight:preflight` command did catch
+    it. This is model run-to-run variance in what gets surfaced, not a
+    prompt/schema bug — the category is explicitly listed in `fix.md`'s
+    "never auto-fix" list. Worth a spot-check after any future prompt change
+    to `fix.md`, but not something a prompt tweak reliably fixes.

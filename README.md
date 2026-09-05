@@ -81,6 +81,19 @@ found — not a generic template. If the naming convention is genuinely
 mixed, it says so rather than forcing a rule. Won't overwrite an existing
 `.preflight.md` unless you pass `--force`.
 
+## Auto-fixing the safe findings
+
+```
+/pr-preflight:fix
+```
+
+Runs the same review as `/pr-preflight:preflight`, but applies the findings
+that are mechanical and safe to change without a design decision (leftover
+debug output, unused imports) directly, and reports the rest as usual.
+Secrets, missing tests, `TODO`s, and naming/error-handling drift are never
+auto-applied — those need a human decision, and a secret needs rotation,
+not just deletion.
+
 ## Reminder before you push or open a PR
 
 The plugin also installs a hook: right before Claude runs `git push` or

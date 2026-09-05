@@ -1,5 +1,9 @@
 # PR Pre-flight
 
+[![GitHub release](https://img.shields.io/github/v/release/Samanyu-dev/pr-preflight)](https://github.com/Samanyu-dev/pr-preflight/releases)
+[![GitHub stars](https://img.shields.io/github/stars/Samanyu-dev/pr-preflight)](https://github.com/Samanyu-dev/pr-preflight/stargazers)
+[![Validate plugin manifest](https://github.com/Samanyu-dev/pr-preflight/actions/workflows/validate.yml/badge.svg)](https://github.com/Samanyu-dev/pr-preflight/actions/workflows/validate.yml)
+
 A Claude Code plugin that reviews your changes for what a reviewer would
 flag — before you open the PR. Not a full code review: it only reports the
 things a reasonable reviewer would actually comment on.

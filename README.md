@@ -113,6 +113,16 @@ block the command — it's a permission-confirm prompt with the reminder as
 the reason, so you can approve and continue immediately. Any other command
 is untouched; the hook only reacts to those two.
 
+## Usage stats (maintainer)
+
+There's no install-count API for Claude Code plugins. `scripts/stats.sh`
+pulls the closest real signal from GitHub instead — stars/forks (public,
+unlimited history) and clone/view counts (needs push access, 14-day window):
+
+```
+./scripts/stats.sh
+```
+
 ## Why this and not just asking Claude to "review my diff"
 
 A generic review prompt checks against a style guide it's guessing at. This

@@ -68,6 +68,19 @@ One rule never bends: a path exclusion silences *style* review for that
 path, but a hardcoded secret found in newly-added code is always flagged
 regardless of `.preflight.md`.
 
+Don't want to write it by hand? Generate a starting point instead:
+
+```
+/pr-preflight:init
+```
+
+Scans the repo for its dominant naming convention, where tests actually
+live (sibling files vs. a separate `test/` directory), and any tracked
+vendored/generated directories, then writes `.preflight.md` from what it
+found — not a generic template. If the naming convention is genuinely
+mixed, it says so rather than forcing a rule. Won't overwrite an existing
+`.preflight.md` unless you pass `--force`.
+
 ## Why this and not just asking Claude to "review my diff"
 
 A generic review prompt checks against a style guide it's guessing at. This

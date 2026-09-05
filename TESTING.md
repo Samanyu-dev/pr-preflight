@@ -43,3 +43,29 @@ claude --plugin-dir /path/to/pr-preflight -p "/pr-preflight:init [--force]" \
    — reported as mixed with no majority instead of forcing a rule; sibling
    `*.test.py` layout detected; exclusion section omitted (nothing found)
    rather than padded.
+
+## Hooks
+
+`hooks/hooks.json` + `hooks/preflight-reminder.sh` can't be verified by
+reading the prose — a hook either matches the actual JSON schema Claude Code
+enforces or it silently fails validation. Verify with `--debug-file` and
+`--include-hook-events`, grepping the log for `Hook PreToolUse`:
+
+```
+claude --plugin-dir /path/to/pr-preflight --debug-file /tmp/debug.log \
+  --include-hook-events -p "Run this exact bash command and report its exit code: git push" \
+  --allowedTools "Bash"
+grep -i "Hook PreToolUse" /tmp/debug.log
+```
+
+8. **First attempt failed validation** — `permissionDecision: "suggest"` +
+   `additionalContext` isn't valid for `PreToolUse` (only `allow`/`deny`/
+   `ask`/`defer` + `permissionDecisionReason`/`updatedInput` are). The debug
+   log printed the exact expected schema; fixed to `permissionDecision: "ask"`
+   + `permissionDecisionReason`.
+9. **`git push`** and **`gh pr create --title x --body y`** — both matched;
+   the model's own transcript shows it received the reminder text via the
+   permission-ask reason and reported it back, rather than the raw command
+   output.
+10. **Unrelated command** (`ls`) — no `Hook PreToolUse` log line at all, i.e.
+    no prompt/friction added for anything that isn't a push or PR creation.

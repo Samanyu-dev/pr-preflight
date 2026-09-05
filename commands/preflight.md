@@ -26,10 +26,12 @@ report things a reasonable reviewer would actually comment on.
 
 ## 2. Scope the review
 
-If the diff touches more than ~15 files or ~800 changed lines, say so up
-front, then focus depth on the files with the most logic changes — skip
-generated files, lockfiles, vendored code, and pure renames — rather than
-reviewing everything shallowly. Name which files you deprioritized and why.
+If the diff touches more than ~15 files or ~800 changed lines, state that
+size up front unconditionally (file count, line count) before any findings,
+then focus depth on the files with the most logic changes — skip generated
+files, lockfiles, vendored code, and pure renames — rather than reviewing
+everything shallowly. Name which files you deprioritized and why, even if
+the whole diff turns out to be low-risk filler.
 
 ## 3. Check each touched file against its own neighborhood
 
